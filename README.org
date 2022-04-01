@@ -1,0 +1,238 @@
+#+latex_class: my-article
+#+title: Simplenodes
+
+| {{{examplenode(1,Simple)}}} |   |                                |
+|                             |   | {{{alertnode(2,simplenodes)}}} |
+| {{{simplenode(3,Nodes)}}}   |   |                                |
+{{{link(1,2)}}}
+{{{link(3,2)}}}
+* Introduction
+Creating tikz figures may be fun but after a while it becomes repetitive and you find yourself implementing the same
+repetitive patterns over and over again.
+This has a few negative effects on your daily productivity;
+- bad coding style by copy-pasting old solutions,
+- un-maintainable code,
+- repeating yourself over and over again,
+- inconsistent styles in a single document and over multiple documents.
+
+
+
+This package tries to solve these issues by providing two simple commands;
+- one command to create simple nodes,
+- one command to link these nodes.
+    Some simple styling options can be changed upon loading the package.
+
+* Usage
+After including the package via the command
+#+BEGIN_EXAMPLE
+\usepackage{simplenodes}
+#+END_EXAMPLE
+all package commands are available.
+** Creating a node
+Four different nodes are supported at the moment;
+
+
+| *Command*                     | *Result*                          |
+|-----------------------------+---------------------------------|
+| =\simplenode{name}{Normal}=   | {{{simplenode(name,Normal)}}}   |
+| =\examplenode{name}{Example}= | {{{examplenode(name,Example)}}} |
+| =\warnnode{name}{Warning}=    | {{{warnnode(name,Warning)}}}    |
+| =\alertnode{name}{Alert}=     | {{{alertnode(name,Alert)}}}     |
+The first parameter is the =name= used to link two nodes together.
+The third parameter is the =text= displayed inside the node.
+
+** Linking nodes
+Linking nodes is done via the command =\link{name1}{name2}=, where the
+name is defined upon creating the node.
+
+** Positioning nodes
+The intended use of this package is to position the nodes using the tabular environment.
+Nodes can be placed in cells of tables to create an easy and even layout.
+This usage is demonstrated in the examples.
+The usage of this package is not restricted to this usecase.
+
+* Package options
+A few packaged options are provided by using
+#+BEGIN_EXAMPLE
+\usepackage[name1=value1,name2=value2,...]{simplenodes}
+#+END_EXAMPLE
+The name, default value and description is provided in the following table
+| *Name*      | *Default* | *Description*                                         |
+|-----------+---------+-----------------------------------------------------|
+| =align=     | center  | Specifies the alignment of the text in the nodes.   |
+| =width=     | 25mm    | The width of the nodes.                             |
+| =innersep=  | 2pt     | The inner separation between the text and the node. |
+| =outersep=  | 0pt     | The outer separation between the nodes.             |
+| =thickness= | 0.4pt   | The line thickness of the nodes and links.          |
+
+* Examples
+** Hello world
+| {{{simplenode(hello,hello)}}} | {{{simplenode(world,world)}}} |
+{{{link(hello,world)}}}
+#+begin_src latex :tangel no :exports code
+\begin{tabular}{ll}
+\simplenode{hello}{hello} & \simplenode{world}{world}\\
+\end{tabular}
+\link{hello}{world}
+#+end_src
+
+** More color
+| {{{simplenode(1,simple)}}} | {{{examplenode(2,example)}}} | {{{warnnode(3,warn)}}} | {{{alertnode(4,alert)}}} |
+{{{link(1,2)}}}
+{{{link(2,3)}}}
+{{{link(3,4)}}}
+
+#+begin_src latex :tangel no :exports code
+\begin{tabular}{llll}
+\simplenode{1}{simple} &
+\examplenode{2}{example} &
+\warnnode{3}{warn} &
+\alertnode{4}{alert}\\
+\end{tabular}
+\link{1}{2}
+\link{2}{3}
+\link{3}{4}
+#+end_src
+** Order of the arrows and doule arrows
+| {{{simplenode(1,node 1)}}} | {{{examplenode(2,node 2)}}} | {{{warnnode(3,node 3)}}} |
+{{{link(1,2)}}}
+{{{link(2,3)}}}
+{{{link(3,2)}}}
+
+#+begin_src latex :tangel no :exports code
+\begin{tabular}{lll}
+\simplenode{1}{node 1} & \examplenode{2}{node 2} & \warnnode{3}{node 3}\\
+\end{tabular}
+\end{center}
+\link{1}{2}
+\link{2}{3}
+\link{3}{2}
+#+end_src
+** Overly complex
+| {{{simplenode(11, Simple node)}}}   |   |                                |   | {{{simplenode(13, Simple node)}}} |
+|                                     |   |                                |   |                                   |
+| {{{examplenode(21, Example node)}}} |   | {{{alertnode(22,Alert node)}}} |   | {{{simplenode(23, Simple node)}}} |
+|                                     |   |                                |   |                                   |
+| {{{warnnode(31, Warn node)}}}       |   |                                |   | {{{simplenode(33, Simple node)}}} |
+|                                     |   |                                |   |                                   |
+{{{link(22,23)}}}
+{{{link(22,21)}}}
+{{{link(22,33)}}}
+{{{link(22,31)}}}
+{{{link(22,11)}}}
+{{{link(22,13)}}}
+{{{link(11,13)}}}
+{{{link(33,31)}}}
+{{{link(21,11)}}}
+{{{link(21,31)}}}
+{{{link(13,23)}}}
+{{{link(33,23)}}}
+
+#+begin_src latex :tangel no :exports code
+\begin{tabular}{lllll}
+\simplenode{11}{ Simple node} &  &  &  & \simplenode{13}{ Simple node}\\
+ &  &  &  & \\
+\examplenode{21}{ Example node} &  & \alertnode{22}{Alert node}
+                                    &  & \simplenode{23}{ Simple node}\\
+ &  &  &  & \\
+\warnnode{31}{ Warn node} &  &  &  & \simplenode{33}{ Simple node}\\
+ &  &  &  & \\
+\end{tabular}
+\link{22}{23} \link{22}{21} \link{22}{33}
+\link{22}{31} \link{22}{11} \link{22}{13}
+\link{11}{13} \link{33}{31} \link{21}{11}
+\link{21}{31} \link{13}{23} \link{33}{23}
+#+end_src
+* Implementation
+
+#+BEGIN_SRC latex :exports code :tangle ./simplenodes/simplenodes.sty
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{simplenodes}[
+   2022/03/31 A packages that provides simple nodes in four colors.
+]
+
+\RequirePackage{kvoptions}
+
+\DeclareStringOption[25mm]{width}
+\DeclareStringOption[center]{align}
+\DeclareStringOption[2pt]{innersep}
+\DeclareStringOption[0pt]{outersep}
+\DeclareStringOption[0.4pt]{thickness}
+\ProcessKeyvalOptions*
+
+\RequirePackage{kvoptions}
+\RequirePackage{tikz}
+\RequirePackage{color}
+\usetikzlibrary{math}
+
+% Coordinate manipulations
+\newcommand{\gettikzxy}[3]{%
+  \tikz@scan@one@point\pgfutil@firstofone#1\relax
+  \edef#2{\the\pgf@x}%
+  \edef#3{\the\pgf@y}%
+}
+
+% Define the main color
+\definecolor{InvisibleRed}{rgb}{0.97, 0.92, 0.92}
+\definecolor{InvisibleGreen}{rgb}{0.92, 0.97, 0.92}
+\definecolor{InvisibleBlue}{rgb}{0.92, 0.92, 0.97}
+\definecolor{InvisibleYellow}{rgb}{1.0, 1.0, 0.88}
+
+\definecolor{MediumRed}{rgb}{0.925, 0.345, 0.345}
+\definecolor{MediumGreen}{rgb}{0.37, 0.7, 0.66}
+\definecolor{MediumBlue}{rgb}{0.015, 0.315, 0.45}
+\definecolor{MediumYellow}{rgb}{1.0, 0.75, 0.0}
+
+% Define the node
+\newcommand\mynode[2]{
+    \tikz[remember picture,baseline]
+    \node[
+        draw=#1,fill=#2,
+        rectangle,
+        line width = \simplenodes@thickness,
+        align=\simplenodes@align,
+        text width=\simplenodes@width,
+        inner sep=\simplenodes@innersep,
+        outer sep=\simplenodes@outersep
+        ]
+}
+
+% Define the line
+\newcommand\myline[2]{
+    \draw[
+        ->,
+        line width = \simplenodes@thickness
+    ] (#1) to (#2);
+}
+
+\newcommand\link[2]{
+    \begin{tikzpicture}[
+      remember picture, overlay, >=stealth, shift={(0,0)}
+    ]
+        \gettikzxy{(#1)}{\ax}{\ay}
+        \gettikzxy{(#2)}{\bx}{\by}
+        \tikzmath{
+            if \ax == \bx then {
+                if \ay < \by then {
+                    {\myline{#1.north}{#2.south}};
+                };
+                if \ay > \by then {
+                    {\myline{#1.south}{#2.north}};
+                };
+            };
+            if \ax < \bx then {
+                {\myline{#1.east}{#2.west}};
+            };
+            if \ax > \bx then {
+                {\myline{#1.west}{#2.east}};
+            };
+        };
+    \end{tikzpicture}
+}
+
+% Provide the commands
+\newcommand\simplenode[2]{\mynode{MediumBlue}{InvisibleBlue} (#1){#2};}
+\newcommand\examplenode[2]{\mynode{MediumGreen}{InvisibleGreen} (#1){#2};}
+\newcommand\alertnode[2]{\mynode{MediumRed}{InvisibleRed} (#1){#2};}
+\newcommand\warnnode[2]{\mynode{MediumYellow}{InvisibleYellow} (#1){#2};}
+#+END_SRC

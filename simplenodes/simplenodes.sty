@@ -1,0 +1,89 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{simplenodes}[
+   2022/03/31 A packages that provides simple nodes in four colors.
+]
+
+\RequirePackage{kvoptions}
+
+\DeclareStringOption[25mm]{width}
+\DeclareStringOption[center]{align}
+\DeclareStringOption[2pt]{innersep}
+\DeclareStringOption[0pt]{outersep}
+\DeclareStringOption[0.4pt]{thickness}
+\ProcessKeyvalOptions*
+
+\RequirePackage{kvoptions}
+\RequirePackage{tikz}
+\RequirePackage{color}
+\usetikzlibrary{math}
+
+% Coordinate manipulations
+\newcommand{\gettikzxy}[3]{%
+  \tikz@scan@one@point\pgfutil@firstofone#1\relax
+  \edef#2{\the\pgf@x}%
+  \edef#3{\the\pgf@y}%
+}
+
+% Define the main color
+\definecolor{InvisibleRed}{rgb}{0.97, 0.92, 0.92}
+\definecolor{InvisibleGreen}{rgb}{0.92, 0.97, 0.92}
+\definecolor{InvisibleBlue}{rgb}{0.92, 0.92, 0.97}
+\definecolor{InvisibleYellow}{rgb}{1.0, 1.0, 0.88}
+
+\definecolor{MediumRed}{rgb}{0.925, 0.345, 0.345}
+\definecolor{MediumGreen}{rgb}{0.37, 0.7, 0.66}
+\definecolor{MediumBlue}{rgb}{0.015, 0.315, 0.45}
+\definecolor{MediumYellow}{rgb}{1.0, 0.75, 0.0}
+
+% Define the node
+\newcommand\mynode[2]{
+    \tikz[remember picture,baseline]
+    \node[
+        draw=#1,fill=#2,
+        rectangle,
+        line width = \simplenodes@thickness,
+        align=\simplenodes@align,
+        text width=\simplenodes@width,
+        inner sep=\simplenodes@innersep,
+        outer sep=\simplenodes@outersep
+        ]
+}
+
+% Define the line
+\newcommand\myline[2]{
+    \draw[
+        ->,
+        line width = \simplenodes@thickness
+    ] (#1) to (#2);
+}
+
+\newcommand\link[2]{
+    \begin{tikzpicture}[
+      remember picture, overlay, >=stealth, shift={(0,0)}
+    ]
+        \gettikzxy{(#1)}{\ax}{\ay}
+        \gettikzxy{(#2)}{\bx}{\by}
+        \tikzmath{
+            if \ax == \bx then {
+                if \ay < \by then {
+                    {\myline{#1.north}{#2.south}};
+                };
+                if \ay > \by then {
+                    {\myline{#1.south}{#2.north}};
+                };
+            };
+            if \ax < \bx then {
+                {\myline{#1.east}{#2.west}};
+            };
+            if \ax > \bx then {
+                {\myline{#1.west}{#2.east}};
+            };
+        };
+    \end{tikzpicture}
+}
+
+% Provide the commands
+\newcommand\simplenode[2]{\mynode{MediumBlue}{InvisibleBlue} (#1){#2};}
+\newcommand\examplenode[2]{\mynode{MediumGreen}{InvisibleGreen} (#1){#2};}
+\newcommand\alertnode[2]{\mynode{MediumRed}{InvisibleRed} (#1){#2};}
+\newcommand\warnnode[2]{\mynode{MediumYellow}{InvisibleYellow} (#1){#2};}
