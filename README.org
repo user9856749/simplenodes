@@ -1,5 +1,6 @@
 #+latex_class: my-article
 #+title: Simplenodes
+#+author: Bob Vergauwen
 
 | {{{examplenode(1,Simple)}}} |   |                                |
 |                             |   | {{{alertnode(2,simplenodes)}}} |
@@ -61,6 +62,7 @@ The name, default value and description is provided in the following table
 |-----------+---------+-----------------------------------------------------|
 | =align=     | center  | Specifies the alignment of the text in the nodes.   |
 | =width=     | 25mm    | The width of the nodes.                             |
+| =minheight= | 7mm     | The minimum width of the nodes.                     |
 | =innersep=  | 2pt     | The inner separation between the text and the node. |
 | =outersep=  | 0pt     | The outer separation between the nodes.             |
 | =thickness= | 0.4pt   | The line thickness of the nodes and links.          |
@@ -147,13 +149,12 @@ The name, default value and description is provided in the following table
 
 #+BEGIN_SRC latex :exports code :tangle ./simplenodes/simplenodes.sty
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{simplenodes}[
-   2022/03/31 A packages that provides simple nodes in four colors.
-]
+\ProvidesPackage{simplenodes}[2022/03/31 A pachkages that provides simple nodes in four colors.]
 
 \RequirePackage{kvoptions}
 
 \DeclareStringOption[25mm]{width}
+\DeclareStringOption[7mm]{minheight}
 \DeclareStringOption[center]{align}
 \DeclareStringOption[2pt]{innersep}
 \DeclareStringOption[0pt]{outersep}
@@ -193,7 +194,8 @@ The name, default value and description is provided in the following table
         align=\simplenodes@align,
         text width=\simplenodes@width,
         inner sep=\simplenodes@innersep,
-        outer sep=\simplenodes@outersep
+        outer sep=\simplenodes@outersep,
+        minimum height=\simplenodes@minheight,
         ]
 }
 
@@ -206,9 +208,7 @@ The name, default value and description is provided in the following table
 }
 
 \newcommand\link[2]{
-    \begin{tikzpicture}[
-      remember picture, overlay, >=stealth, shift={(0,0)}
-    ]
+    \begin{tikzpicture}[remember picture, overlay, >=stealth, shift={(0,0)}]
         \gettikzxy{(#1)}{\ax}{\ay}
         \gettikzxy{(#2)}{\bx}{\by}
         \tikzmath{

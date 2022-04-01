@@ -1,11 +1,10 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{simplenodes}[
-   2022/03/31 A packages that provides simple nodes in four colors.
-]
+\ProvidesPackage{simplenodes}[2022/03/31 A pachkages that provides simple nodes in four colors.]
 
 \RequirePackage{kvoptions}
 
 \DeclareStringOption[25mm]{width}
+\DeclareStringOption[7mm]{minheight}
 \DeclareStringOption[center]{align}
 \DeclareStringOption[2pt]{innersep}
 \DeclareStringOption[0pt]{outersep}
@@ -40,12 +39,13 @@
     \tikz[remember picture,baseline]
     \node[
         draw=#1,fill=#2,
-        rectangle,
+        rectangle,  
         line width = \simplenodes@thickness,
         align=\simplenodes@align,
         text width=\simplenodes@width,
         inner sep=\simplenodes@innersep,
-        outer sep=\simplenodes@outersep
+        outer sep=\simplenodes@outersep,
+        minimum height=\simplenodes@minheight,
         ]
 }
 
@@ -58,9 +58,7 @@
 }
 
 \newcommand\link[2]{
-    \begin{tikzpicture}[
-      remember picture, overlay, >=stealth, shift={(0,0)}
-    ]
+    \begin{tikzpicture}[remember picture, overlay, >=stealth, shift={(0,0)}]
         \gettikzxy{(#1)}{\ax}{\ay}
         \gettikzxy{(#2)}{\bx}{\by}
         \tikzmath{
