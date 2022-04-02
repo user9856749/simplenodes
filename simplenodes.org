@@ -1,6 +1,7 @@
 #+latex_class: my-article
 #+title: Simplenodes
 #+author: Bob Vergauwen
+#+date: 2022/03/31
 
 | {{{examplenode(1,Simple)}}} |   |                                |
 |                             |   | {{{alertnode(2,simplenodes)}}} |
@@ -147,9 +148,36 @@ The name, default value and description is provided in the following table
 #+end_src
 * Implementation
 
-#+BEGIN_SRC latex :exports code :tangle ./simplenodes/simplenodes.sty
+#+BEGIN_SRC latex :exports code :tangle simplenodes.sty
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% simplenodes.sty
+%% <https://github.com/user9856749/simplenodes>
+%%
+%% MIT License
+%%
+%% Copyright (c) 2022 Bob Vergauwen
+%%
+%% Permission is hereby granted, free of charge, to any person obtaining a copy
+%% of this software and associated documentation files (the "Software"), to deal
+%% in the Software without restriction, including without limitation the rights
+%% to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+%% copies of the Software, and to permit persons to whom the Software is
+%% furnished to do so, subject to the following conditions:
+%%
+%% The above copyright notice and this permission notice shall be included in all
+%% copies or substantial portions of the Software.
+%%
+%% THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+%% IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+%% FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+%% AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+%% LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+%% OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+%% SOFTWARE.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{simplenodes}[2022/03/31 A pachkages that provides simple nodes in four colors.]
+\ProvidesPackage{simplenodes}[2022/03/31 A package that provides simple nodes in four colors.]
 
 \RequirePackage{kvoptions}
 
@@ -167,6 +195,8 @@ The name, default value and description is provided in the following table
 \usetikzlibrary{math}
 
 % Coordinate manipulations
+
+
 \newcommand{\gettikzxy}[3]{%
   \tikz@scan@one@point\pgfutil@firstofone#1\relax
   \edef#2{\the\pgf@x}%
@@ -236,3 +266,58 @@ The name, default value and description is provided in the following table
 \newcommand\alertnode[2]{\mynode{MediumRed}{InvisibleRed} (#1){#2};}
 \newcommand\warnnode[2]{\mynode{MediumYellow}{InvisibleYellow} (#1){#2};}
 #+END_SRC
+
+* Read me
+#+begin_src markdown :exports code :tangle README.md
+# simplenodes – Version 2022/03/31
+
+simplenodes is a TeX macro package for generating simple node base
+flow graphs or diagrams, build upon the Ti*k*Z package.
+The package provides two basic commands, one to generate a node and
+one command to create links between them.
+The positioning of the nodes is not handled by the package itself
+but is preferably done in the tabular environment.
+
+In total, 4 simple node types are defined, loosely based on the
+nomenclature and color patterns of the popular java script bootstrap
+(https://getbootstrap.com/).
+
+See the file `simplenodes.pdf` for more information on the possibilities
+and best use case of this package.
+See the file `LICENSE` for license details.
+
+## Development
+
+This package is currently maintained by Bob Vergauwen, (bob@vergauwen.me).
+Please go to the official repository at
+https://github.com/user9856749/simplenodes to submit bug reports, request
+new features, etc.
+#+end_src
+
+* Licence
+#+begin_src markdown :exports code :tangle LICENSE
+Licenses for the simplenode package
+===================================
+
+MIT License
+
+Copyright (c) 2022 Bob Vergauwen
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+#+end_src
